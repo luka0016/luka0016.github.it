@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Indovina la password</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        #container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        #passwordContainer {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 10px;
+        }
+        .passwordDigit {
+            width: 50px;
+            height: 50px;
+            border: 1px solid #000;
+            margin: 5px;
+            font-size: 24px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+        #cluePopup {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            border: 1px solid #000;
+            padding: 20px;
+        }
+        #cluePopup p {
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <div id="passwordContainer">
+            <div class="passwordDigit"></div>
+            <div class="passwordDigit"></div>
+            <div class="passwordDigit"></div>
+        </div>
+    </div>
+
+    <div id="cluePopup">
+        <p></p>
+        <button id="closePopup">Chiudi</button>
+    </div>
+
+    <script>
+        var passwordDigits = document.getElementsByClassName('passwordDigit');
+        var currentDigit = 0;
+        var clues = ['Indizio 1', 'Indizio 2', 'Indizio 3']; // Array di indizi per ogni cifra
+        var cluePopup = document.getElementById('cluePopup');
+        var clueText = cluePopup.querySelector('p');
+
+        // Apri il popup con l'indizio
+        function openCluePopup(clue) {
+            clueText.textContent = clue;
+            cluePopup.style.display = 'block';
+        }
+
+        // Chiudi il popup con l'indizio
+        function closeCluePopup() {
+            cluePopup.style.display = 'none';
+        }
+
+        // Funzione chiamata quando viene indovinata una cifra
+        function guessDigit(index) {
+            if (currentDigit >= passwordDigits.length) {
+                return;
+            }
+
+            passwordDigits[currentDigit].innerHTML = index;
+
+            if (index == getCorrectDigit(currentDigit)) {
+                currentDigit++;
+
+                if (currentDigit < passwordDigits.length) {
+                    openCluePopup(clues[currentDigit]);
+                } else {
+                    alert('Hai indovinato la password!');
+                }
+            }
+        }
+
+        // Funzione per ottenere la cifra corretta in base all'indice
+        function getCorrectDigit(index) {
+            var password = '531'; // Password desiderata
+            return password.charAt(index);
+        }
+
+        // Event listener per le cifre
+        for (var i = 0; i < passwordDigits.length; i++) {
+            passwordDigits[i].addEventListener('click', function() {
+                var index = Array.prototype.indexOf.call(passwordDigits, this);
+                guessDigit(index);
+            });
+        }
+
+        // Event listener per il pulsante di chiusura del popup
+        document.getElementById('closePopup').addEventListener('click', closeCluePopup);
+    </script>
+</body>
+</html>
